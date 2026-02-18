@@ -52,6 +52,7 @@ chmod +x ~/bin/check-ram-usage.sh
 
 - `openclaw-gateway`
 - `Beeper` (all related processes)
+- `Proton Mail Bridge` (email sync - IMAP/SMTP)
 - System processes (`kernel_task`, `WindowServer`, `launchd`, etc.)
 
 ## Usage
