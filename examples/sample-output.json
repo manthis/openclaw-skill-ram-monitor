@@ -1,0 +1,15 @@
+{
+  "timestamp": "2026-02-18T20:43:00Z",
+  "ram_pct": 92.5,
+  "ram_used_gb": 14.80,
+  "ram_total_gb": 16.00,
+  "level": "warning",
+  "top_processes": [
+    {"pid": 1234, "name": "Brave Browser", "ram_mb": 2048.0, "user": "manthis"},
+    {"pid": 2345, "name": "iTerm2", "ram_mb": 512.0, "user": "manthis"},
+    {"pid": 3456, "name": "node", "ram_mb": 384.0, "user": "manthis"},
+    {"pid": 4567, "name": "kernel_task", "ram_mb": 1024.0, "user": "root"},
+    {"pid": 5678, "name": "WindowServer", "ram_mb": 768.0, "user": "_windowserver"}
+  ],
+  "killed": []
+}
