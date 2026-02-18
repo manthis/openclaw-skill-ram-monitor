@@ -89,6 +89,8 @@ is_protected() {
     [[ -n "$GATEWAY_PID" ]] && [[ "$pid" == "$GATEWAY_PID" ]] && return 0
     echo "$BEEPER_PIDS" | grep -qw "$pid" && return 0
     echo "$cmd" | grep -qiE 'Beeper' && return 0
+    # Never kill Proton Mail Bridge (email sync)
+    echo "$cmd" | grep -qiE 'Proton Mail Bridge|bridge-gui|/bridge --grpc' && return 0
     [[ "$user" =~ ^_ ]] && return 0
     echo "$cmd" | grep -qE '(kernel_task|loginwindow|WindowServer|launchd|systemstats|sshd)' && return 0
     return 1
