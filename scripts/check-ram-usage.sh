@@ -67,13 +67,47 @@ BEEPER_PIDS=$(echo "$PS_CACHE" | grep -E '[B]eeper' | awk '{print $2}' || echo "
 
 is_protected() {
     local pid=$1 cmd=$2 user=$3
+    
+    # PID 1 (launchd root) is always protected
     [[ "$pid" == "1" ]] && return 0
+    
+    # OpenClaw & critical user apps
     [[ -n "$GATEWAY_PID" && "$pid" == "$GATEWAY_PID" ]] && return 0
     echo "$BEEPER_PIDS" | grep -qw "$pid" && return 0
     echo "$cmd" | grep -qiE 'Beeper' && return 0
     echo "$cmd" | grep -qiE 'Proton Mail Bridge|bridge-gui|/bridge --grpc' && return 0
+    
+    # macOS system contacts & sync
+    echo "$cmd" | grep -qiE 'contactsd|bird|cloudd|syncdefaultsd' && return 0
+    
+    # System user processes (e.g. _windowserver, _locationd)
     [[ "$user" =~ ^_ ]] && return 0
-    echo "$cmd" | grep -qE '(kernel_task|loginwindow|WindowServer|launchd|systemstats|sshd)' && return 0
+    
+    # Core macOS system processes (grouped by category for clarity)
+    # Display & UI
+    echo "$cmd" | grep -qE '(WindowServer|Dock|Finder|SystemUIServer|ControlCenter|NotificationCenter)' && return 0
+    
+    # System services
+    echo "$cmd" | grep -qE '(kernel_task|launchd|loginwindow|logind|systemstats|sshd|cfprefsd|distnoted|UserEventAgent|coreservicesd|fseventsd)' && return 0
+    
+    # Security & encryption & authentication
+    echo "$cmd" | grep -qE '(secd|securityd|trustd|syspolicyd|authd|coreauthd|ctkd|ctkahp|XProtect)' && return 0
+    
+    # Audio, network & connectivity
+    echo "$cmd" | grep -qE '(coreaudiod|bluetoothd|wifid|airportd|locationd|networkd|discoveryd)' && return 0
+    
+    # Spotlight & indexing
+    echo "$cmd" | grep -qE '(mds|mds_stores|mdworker|metadata_server)' && return 0
+    
+    # Time, power & updates
+    echo "$cmd" | grep -qE '(timed|powerd|softwareupdated|systemstats)' && return 0
+    
+    # Communication & iCloud
+    echo "$cmd" | grep -qE '(apsd|identityservicesd|imagent|imtransferagent|soagent)' && return 0
+    
+    # Backup, GPU & system support
+    echo "$cmd" | grep -qE '(backupd|backupd-helper|MTLCompilerService|CVMServer|launchservicesd|iconservicesd|iconservicesagent)' && return 0
+    
     return 1
 }
 
